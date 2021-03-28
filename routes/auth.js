@@ -47,15 +47,15 @@ router.post('/login',async (req,res)=>{
 
     // LETS VALIDATE THE DATA BEFORE WE LOGIN A USER
     const { error } = loginValidation(req.body)
-    if (error) return res.status(400).send(error.details[0].message)
+    if (error) return res.status(400).json(error.details[0].message)
     
     // CHECKING IF USER EXIST IN THE DATABASE
     const user = await User.findOne({email: req.body.email});
-    if (!user) return res.status(400).send('Email is not found')
+    if (!user) return res.status(400).json('Email is not found')
 
     // IF PASSWORD CORRECT OR NOT
     const validPass = await bcrypt.compareSync(req.body.password, user.password)
-    if (!validPass) return res.status(400).send('invalid password')
+    if (!validPass) return res.status(400).json('invalid password')
      
     const access_token = jwt.sign({ _id: user._id},process.env.TOKEN_SECRET)
     // res.header('auth-token',token).send(access_token)

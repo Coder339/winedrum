@@ -39,6 +39,9 @@ const fileStorageEngine = multer.diskStorage({
     filename: (req, file, cb) => {
       cb(null, Date.now() + "--" + file.originalname);
     },
+    path: (req,file,cb)=>{
+        console.log('file',file)
+    }
   });
 
 
@@ -64,7 +67,7 @@ router.post('/',verify,upload.single('image'),async (req,res)=>{
     const product = new Product({
         title: req.body.title,
         description: req.body.description,
-        isFav: req.body.isFav
+        isFav: req.body.isFav,
     });
     product.img.data = fs.readFileSync(req.file.path)
     product.img.contentType = 'jpeg/png'
